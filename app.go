@@ -18,6 +18,7 @@ var (
 	// Mutex to protect access to the maps.
 	Mutex            = &sync.Mutex{}
 	UserIDToUsername = make(map[string]string)
+	ObsPassword      = ""
 )
 
 // UserSpeaking contains the speaking state and a timer for a user.
@@ -40,9 +41,14 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-
 }
-func (a *App) StartBot(token string, voiceChannelID string, guildID string) {
+
+func (a *App) FetchMembers() map[string]string {
+	return UserIDToUsername
+}
+
+func (a *App) StartBot(token string, voiceChannelID string, guildID string, obsPassword string) {
+	ObsPassword = obsPassword
 	// start discord bot client
 	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
